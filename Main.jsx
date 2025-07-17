@@ -1,5 +1,5 @@
 import React from "react"
-import ClaudeRecipe from "./ClaudeRecipe.JSX";
+import ClaudeRecipe from "./ClaudeRecipe.jsx";
 import IngredientsList from "./IngredientsList";
 import { getRecipeFromChefClaude } from "./ai";
 
