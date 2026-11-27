@@ -6,6 +6,8 @@ import { getRecipeFromChefClaude } from "./ai";
 export default function Main(){
     const [ingredients,setIngredients] = React.useState([])
     const[recipe,setRecipe]=React.useState("")
+    const [loading, setLoading] = React.useState(false)
+    const [error, setError] = React.useState("")
     const recipeSection = React.useRef(null)
     
     React.useEffect(() => {
@@ -28,8 +30,16 @@ export default function Main(){
     }
    
     async function getRecipe(){
-       const recipeIdea = await getRecipeFromChefClaude(ingredients)
-       setRecipe(recipeIdea)
+        setLoading(true)
+        setError("")
+        try {
+            const recipeIdea = await getRecipeFromChefClaude(ingredients)
+            setRecipe(recipeIdea)
+        } catch (err) {
+            setError(err.message)
+        } finally {
+            setLoading(false)
+        }
     }
 
     return(
@@ -39,8 +49,9 @@ export default function Main(){
                 <button>Add Ingredients</button>
             </form>
             {ingredients.length >0 ?
-                <IngredientsList ref={recipeSection} ingredients={ingredients} getRecipe={getRecipe}/>
+                <IngredientsList ref={recipeSection} ingredients={ingredients} getRecipe={getRecipe} loading={loading}/>
             :null}
+            {error ? <p className="error-message" role="alert">{error}</p> : null}
             {recipe? 
                 <ClaudeRecipe recipe = {recipe}/>
             :null}
